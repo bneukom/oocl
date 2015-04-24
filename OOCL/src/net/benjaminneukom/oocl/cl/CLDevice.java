@@ -1,4 +1,4 @@
-package net.benjaminneukom.internal.oocl;
+package net.benjaminneukom.oocl.cl;
 
 import static org.jocl.CL.*;
 

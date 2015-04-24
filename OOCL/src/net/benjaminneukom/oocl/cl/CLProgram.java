@@ -1,4 +1,4 @@
-package net.benjaminneukom.internal.oocl;
+package net.benjaminneukom.oocl.cl;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class CLProgram implements Closeable {
 	}
 
 	public void build(final BuildOption... options) {
-		clBuildProgram(program, 0, null, Arrays.stream(options).map(o -> o.option).reduce("", (accu, o) -> accu + " " + o), null, null);
+		clBuildProgram(program, 0, null, Arrays.stream(options).filter(o -> o != null).map(o -> o.option).reduce("", (accu, o) -> accu + " " + o), null, null);
 	}
 
 	public CLKernel createKernel(String kernelName) {
