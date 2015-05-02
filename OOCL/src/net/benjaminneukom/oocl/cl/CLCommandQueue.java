@@ -12,6 +12,7 @@ public class CLCommandQueue {
 	}
 
 	public void execute(CLKernel kernel, int dimensions, long globalWorkSize, long localWorkSize) {
+//		clEnqueueNDRangeKernel(queue, kernel.getKernel(), dimensions, null, new long[] { globalWorkSize }, new long[] { localWorkSize }, 0, null, null);
 		clEnqueueNDRangeKernel(queue, kernel.getKernel(), dimensions, null, new long[] { globalWorkSize }, new long[] { localWorkSize }, 0, null, null);
 	}
 

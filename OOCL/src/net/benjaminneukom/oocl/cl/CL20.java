@@ -15,7 +15,8 @@ import com.jogamp.nativewindow.NativeSurface;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLContext;
 
-public class CL20 {
+public final class CL20 {
+
 	/**
 	 * Initializes the given context properties so that they may be used to
 	 * create an OpenCL context for the given GL object.
@@ -67,12 +68,7 @@ public class CL20 {
 
 		final CLPlatform platform = CLPlatform.first();
 
-		final CLDevice device = platform.getDevice(CL_DEVICE_TYPE_GPU, d -> {
-			final String deviceVersion = d.getDeviceInfo(CL_DEVICE_VERSION);
-			final String versionString = deviceVersion.substring(7, 10);
-			final float version = Float.parseFloat(versionString);
-			return version >= 2.0;
-		}).orElseThrow(() -> new IllegalStateException());
+		final CLDevice device = platform.getDevice(CL_DEVICE_TYPE_GPU, d -> d.getDeviceVersion() >= 2.0f).orElseThrow(() -> new IllegalStateException());
 
 		return device;
 
