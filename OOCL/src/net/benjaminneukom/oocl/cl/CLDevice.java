@@ -2,8 +2,6 @@ package net.benjaminneukom.oocl.cl;
 
 import static org.jocl.CL.*;
 
-import java.nio.ByteBuffer;
-
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
 import org.jocl.cl_context;
@@ -18,7 +16,13 @@ public class CLDevice {
 		this.id = id;
 		this.platform = platform;
 	}
-
+	
+	
+	
+	/**
+	 * Returns the OpenCL device version.
+	 * @return the OpenCL device version.
+	 */
 	public float getDeviceVersion() {
 		final String deviceVersion = getDeviceInfoString(CL_DEVICE_VERSION);
 		final String versionString = deviceVersion.substring(7, 10);
@@ -52,6 +56,12 @@ public class CLDevice {
 		return values;
 	}
 
+	/**
+	 * Returns the opencl device info string.
+	 * 
+	 * @param param
+	 * @return
+	 */
 	public String getDeviceInfoString(int param) {
 		long size[] = new long[1];
 		clGetDeviceInfo(id, param, 0, null, size);
@@ -62,6 +72,11 @@ public class CLDevice {
 		return new String(buffer, 0, buffer.length - 1);
 	}
 
+	/**
+	 * Creates a new {@link CLContext}
+	 * 
+	 * @return
+	 */
 	public CLContext createContext() {
 		final cl_context_properties contextProperties = new cl_context_properties();
 		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platform.getPlatformId());
@@ -71,8 +86,28 @@ public class CLDevice {
 		return new CLContext(context, this);
 	}
 
+	/**
+	 * Returns the internal id.
+	 * 
+	 * @return
+	 */
 	public cl_device_id getId() {
 		return id;
+	}
+	
+	public enum DeviceType {
+		CPU(CL_DEVICE_TYPE_CPU), GPU(CL_DEVICE_TYPE_GPU);
+		
+		private final long type;
+
+		private DeviceType(long type) {
+			this.type = type;
+		}
+		
+		public long getType() {
+			return type;
+		}
+		
 	}
 
 }

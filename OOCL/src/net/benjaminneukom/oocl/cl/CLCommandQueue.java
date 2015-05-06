@@ -12,7 +12,6 @@ public class CLCommandQueue {
 	}
 
 	public void execute(CLKernel kernel, int dimensions, long globalWorkSize, long localWorkSize) {
-//		clEnqueueNDRangeKernel(queue, kernel.getKernel(), dimensions, null, new long[] { globalWorkSize }, new long[] { localWorkSize }, 0, null, null);
 		clEnqueueNDRangeKernel(queue, kernel.getKernel(), dimensions, null, new long[] { globalWorkSize }, new long[] { localWorkSize }, 0, null, null);
 	}
 
@@ -20,6 +19,10 @@ public class CLCommandQueue {
 		clEnqueueReadBuffer(queue, memory.getMemory(), CL_TRUE, 0, memory.getSize(), memory.getPointer(), 0, null, null);
 	}
 
+	public void flush() {
+		clFlush(queue);
+	}
+	
 	public void finish() {
 		clFinish(queue);
 	}

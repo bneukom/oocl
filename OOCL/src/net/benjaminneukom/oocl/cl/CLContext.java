@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import net.benjaminneukom.oocl.cl.CLProgram.BuildOption;
+
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
 import org.jocl.cl_command_queue;
@@ -31,6 +33,13 @@ public class CLContext implements Closeable {
 		return new CLCommandQueue(commandQueue);
 	}
 
+	/**
+	 * Creates a {@link CLProgram} from the given Files.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	public CLProgram createProgram(final File... file) throws IOException {
 		final String[] programms = Arrays.stream(file).map(f -> {
 			try {
@@ -44,6 +53,32 @@ public class CLContext implements Closeable {
 		return createProgram(programms);
 	}
 
+	/**
+	 * Returns the kernel from the given program file. This method automatically loads and builds the program and returns the kernel.
+	 * 
+	 * @param file
+	 * @param kernel
+	 * @param options
+	 * @return
+	 */
+	public CLKernel createKernel(File file, String kernel, BuildOption... options) {
+		try {
+			final CLProgram program = createProgram(file);
+			program.build(options);
+			return program.createKernel(kernel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Creates a program with the given sources.
+	 * 
+	 * @param sources
+	 * @return
+	 */
 	public CLProgram createProgram(final String... sources) {
 
 		final cl_program program = clCreateProgramWithSource(context, 1, sources, null, null);
@@ -51,25 +86,51 @@ public class CLContext implements Closeable {
 		return new CLProgram(program);
 	}
 
+	/**
+	 * Creates a buffer memory object from the given int array.
+	 * 
+	 * @param flags
+	 * @param data
+	 * @return
+	 */
 	public CLMemory createBuffer(final long flags, final int[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_int * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_int * data.length, pointer);
+		return new CLMemory(mem, Sizeof.cl_int * data.length, pointer, data);
 	}
-	
+
+	/**
+	 * Creates a buffer memory object from the given long array.
+	 * 
+	 * @param flags
+	 * @param data
+	 * @return
+	 */
 	public CLMemory createBuffer(final long flags, final long[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_ulong * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_ulong * data.length, pointer);
+		return new CLMemory(mem, Sizeof.cl_ulong * data.length, pointer, data);
 	}
 
+	/**
+	 * Creates a buffer memory object from the given float array.
+	 * 
+	 * @param flags
+	 * @param data
+	 * @return
+	 */
 	public CLMemory createBuffer(long flags, float[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_float * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_float * data.length, pointer);
+		return new CLMemory(mem, Sizeof.cl_float * data.length, pointer, data);
 
 	}
 
+	/**
+	 * Returns the internal id.
+	 * 
+	 * @return
+	 */
 	public cl_context getContext() {
 		return context;
 

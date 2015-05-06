@@ -11,7 +11,6 @@ import org.jocl.cl_kernel;
 
 public class CLKernel implements Closeable {
 	private cl_kernel kernel;
-	private int argumentIndex;
 	private String kernelName;
 
 	public CLKernel(cl_kernel kernel, String kernelName) {
@@ -19,31 +18,50 @@ public class CLKernel implements Closeable {
 		this.kernelName = kernelName;
 	}
 
+	/**
+	 * Creates a {@link CLKernel} from the given {@link CLProgram} with the given kernel name.
+	 * 
+	 * @param program
+	 * @param kernelName
+	 * @return
+	 */
 	public static CLKernel createKernel(CLProgram program, String kernelName) {
 		cl_kernel kernel = clCreateKernel(program.getId(), kernelName, null);
 
 		return new CLKernel(kernel, kernelName);
 	}
-	
-	public void setArgument(int index, long argSize, Pointer value) {
-		throw new IllegalStateException();
+
+	/**
+	 * Sets the arguments of this kernel.
+	 * 
+	 * @param memory
+	 */
+	public void setArguments(CLMemory... memory) {
+		for (int memoryIndex = 0; memoryIndex < memory.length; ++memoryIndex) {
+			clSetKernelArg(kernel, memoryIndex, Sizeof.cl_mem, Pointer.to(memory[memoryIndex].getMemory()));
+		}
 	}
 
+	/**
+	 * Returns the internal kernel id.
+	 * 
+	 * @return
+	 */
 	public cl_kernel getKernel() {
 		return kernel;
 	}
-	
+
+	/**
+	 * Returns the name of the kernel.
+	 * 
+	 * @return
+	 */
 	public String getKernelName() {
 		return kernelName;
 	}
 
-	public CLKernel addArgument(CLMemory memory) {
-		clSetKernelArg(kernel, argumentIndex++, Sizeof.cl_mem, Pointer.to(memory.getMemory()));
-		return this;
-	}
-
 	@Override
 	public void close() throws IOException {
-//		clReleaseKernel(kernel);
+		clReleaseKernel(kernel);
 	}
 }

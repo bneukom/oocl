@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.benjaminneukom.oocl.cl.CLDevice.DeviceType;
+
 import org.jocl.cl_device_id;
 import org.jocl.cl_platform_id;
 
@@ -37,7 +39,7 @@ public class CLPlatform implements Closeable {
 	 * 
 	 * @return
 	 */
-	public static CLPlatform first() {
+	public static CLPlatform getFirst() {
 		return getPlatforms().stream().findFirst().orElse(null);
 	}
 
@@ -61,7 +63,7 @@ public class CLPlatform implements Closeable {
 	 * @param filter
 	 * @return
 	 */
-	public Optional<CLDevice> getDevice(long deviceType, Predicate<CLDevice> filter) {
+	public Optional<CLDevice> getDevice(DeviceType deviceType, Predicate<CLDevice> filter) {
 		return getDevices(deviceType).stream().filter(filter).findFirst();
 	}
 
@@ -71,15 +73,15 @@ public class CLPlatform implements Closeable {
 	 * @param deviceType
 	 * @return
 	 */
-	public List<CLDevice> getDevices(long deviceType) {
+	public List<CLDevice> getDevices(DeviceType deviceType) {
 		// Obtain the number of devices for the platform
 		int numDevicesArray[] = new int[1];
-		clGetDeviceIDs(platformId, deviceType, 0, null, numDevicesArray);
+		clGetDeviceIDs(platformId, deviceType.getType(), 0, null, numDevicesArray);
 		int numDevices = numDevicesArray[0];
 
 		// Obtain the all device IDs
 		cl_device_id allDevices[] = new cl_device_id[numDevices];
-		clGetDeviceIDs(platformId, deviceType, numDevices, allDevices, null);
+		clGetDeviceIDs(platformId, deviceType.getType(), numDevices, allDevices, null);
 
 		return Arrays.stream(allDevices).map(id -> new CLDevice(id, this)).collect(Collectors.toList());
 	}

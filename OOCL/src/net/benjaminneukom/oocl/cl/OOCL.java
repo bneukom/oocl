@@ -15,18 +15,22 @@ import com.jogamp.nativewindow.NativeSurface;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLContext;
 
-public final class CL20 {
+// TODO needed?
+public final class OOCL {
+	
+	static {
+		CL.setExceptionsEnabled(true);
+	}
 
 	/**
-	 * Initializes the given context properties so that they may be used to
-	 * create an OpenCL context for the given GL object.
+	 * Initializes the given context properties so that they may be used to create an OpenCL context for the given GL object.
 	 * 
 	 * @param contextProperties
 	 *            The context properties
 	 * @param gl
 	 *            The GL object
 	 */
-	public static void initContextProperties(final cl_context_properties contextProperties, final GL gl) {
+	public static void initializeGLProperties(final cl_context_properties contextProperties, final GL gl) {
 		// Adapted from http://jogamp.org/jocl/www/
 
 		final GLContext glContext = gl.getContext();
@@ -58,19 +62,4 @@ public final class CL20 {
 		}
 	}
 
-	/**
-	 * Initializes OpenCL 2 and returns the OpenCL device.
-	 * 
-	 * @return
-	 */
-	public static CLDevice createDevice() {
-		CL.setExceptionsEnabled(true);
-
-		final CLPlatform platform = CLPlatform.first();
-
-		final CLDevice device = platform.getDevice(CL_DEVICE_TYPE_GPU, d -> d.getDeviceVersion() >= 2.0f).orElseThrow(() -> new IllegalStateException());
-
-		return device;
-
-	}
 }

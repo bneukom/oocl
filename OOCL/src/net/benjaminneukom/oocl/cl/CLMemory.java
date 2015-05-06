@@ -12,12 +12,14 @@ public class CLMemory implements Closeable {
 	private cl_mem memory;
 	private Pointer pointer;
 	private long size;
+	private Object data;
 
-	public CLMemory(cl_mem memory, long size, Pointer pointer) {
+	public CLMemory(cl_mem memory, long size, Pointer pointer, Object data) {
 		super();
 		this.memory = memory;
 		this.size = size;
 		this.pointer = pointer;
+		this.data = data;
 	}
 
 	/* default */Pointer getPointer() {
@@ -30,6 +32,10 @@ public class CLMemory implements Closeable {
 
 	public cl_mem getMemory() {
 		return memory;
+	}
+	
+	public Object getData() {
+		return data;
 	}
 
 	@Override
