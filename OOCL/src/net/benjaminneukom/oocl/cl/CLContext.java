@@ -86,6 +86,11 @@ public class CLContext implements Closeable {
 		return new CLProgram(program);
 	}
 
+	public CLMemory<Void> createFromGLBuffer(long flags, int vbo) {
+		final cl_mem mem = clCreateFromGLBuffer(context, CL_MEM_WRITE_ONLY, vbo, null);
+		return new CLMemory<Void>(mem, -1, Pointer.to(mem), null);
+	}
+
 	/**
 	 * Creates a buffer memory object from the given int array.
 	 * 
@@ -93,10 +98,33 @@ public class CLContext implements Closeable {
 	 * @param data
 	 * @return
 	 */
-	public CLMemory createBuffer(final long flags, final int[] data) {
+	public CLMemory<Void> createEmptyBuffer(final long flags, int size) {
+		final cl_mem mem = clCreateBuffer(context, flags, size, null, null);
+		return new CLMemory<Void>(mem, Sizeof.cl_mem, Pointer.to(mem), null);
+	}
+
+	/**
+	 * Creates a buffer memory object from the given vbo.
+	 * 
+	 * @param flags
+	 * @param data
+	 * @return
+	 */
+	public CLMemory<int[]> createBufferFromGLBuffer(final long flags, int vbo) {
+		return null;
+	}
+
+	/**
+	 * Creates a buffer memory object from the given int array.
+	 * 
+	 * @param flags
+	 * @param data
+	 * @return
+	 */
+	public CLMemory<int[]> createBuffer(final long flags, final int[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_int * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_int * data.length, pointer, data);
+		return new CLMemory<int[]>(mem, Sizeof.cl_int * data.length, pointer, data);
 	}
 
 	/**
@@ -106,10 +134,10 @@ public class CLContext implements Closeable {
 	 * @param data
 	 * @return
 	 */
-	public CLMemory createBuffer(final long flags, final long[] data) {
+	public CLMemory<long[]> createBuffer(final long flags, final long[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_ulong * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_ulong * data.length, pointer, data);
+		return new CLMemory<long[]>(mem, Sizeof.cl_ulong * data.length, pointer, data);
 	}
 
 	/**
@@ -119,10 +147,10 @@ public class CLContext implements Closeable {
 	 * @param data
 	 * @return
 	 */
-	public CLMemory createBuffer(long flags, float[] data) {
+	public CLMemory<float[]> createBuffer(long flags, float[] data) {
 		final Pointer pointer = Pointer.to(data);
 		final cl_mem mem = clCreateBuffer(context, flags, Sizeof.cl_float * data.length, pointer, null);
-		return new CLMemory(mem, Sizeof.cl_float * data.length, pointer, data);
+		return new CLMemory<float[]>(mem, Sizeof.cl_float * data.length, pointer, data);
 
 	}
 

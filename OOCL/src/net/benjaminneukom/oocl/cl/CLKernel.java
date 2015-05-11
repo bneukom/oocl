@@ -36,7 +36,7 @@ public class CLKernel implements Closeable {
 	 * 
 	 * @param memory
 	 */
-	public void setArguments(CLMemory... memory) {
+	public void setArguments(CLMemory<?>... memory) {
 		for (int memoryIndex = 0; memoryIndex < memory.length; ++memoryIndex) {
 			clSetKernelArg(kernel, memoryIndex, Sizeof.cl_mem, Pointer.to(memory[memoryIndex].getMemory()));
 		}

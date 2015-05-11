@@ -8,13 +8,13 @@ import static org.jocl.CL.*;
 import org.jocl.Pointer;
 import org.jocl.cl_mem;
 
-public class CLMemory implements Closeable {
+public class CLMemory<T> implements Closeable {
 	private cl_mem memory;
 	private Pointer pointer;
 	private long size;
-	private Object data;
+	private T data;
 
-	public CLMemory(cl_mem memory, long size, Pointer pointer, Object data) {
+	public CLMemory(cl_mem memory, long size, Pointer pointer, T data) {
 		super();
 		this.memory = memory;
 		this.size = size;
@@ -34,12 +34,17 @@ public class CLMemory implements Closeable {
 		return memory;
 	}
 	
-	public Object getData() {
+	public T getData() {
 		return data;
 	}
 
 	@Override
 	public void close() throws IOException {
 		clReleaseMemObject(memory);
+	}
+
+	public void release() {
+		clReleaseMemObject(memory);
+		memory = null;
 	}
 }

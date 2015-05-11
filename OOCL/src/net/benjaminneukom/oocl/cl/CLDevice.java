@@ -71,6 +71,19 @@ public class CLDevice {
 
 		return new String(buffer, 0, buffer.length - 1);
 	}
+	
+	/**
+	 * Creates a new {@link CLContext}
+	 * 
+	 * @return
+	 */
+	public CLContext createContext(cl_context_properties contextProperties) {
+		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platform.getPlatformId());
+
+		final cl_context context = clCreateContext(contextProperties, 1, new cl_device_id[] { id }, null, null, null);
+
+		return new CLContext(context, this);
+	}
 
 	/**
 	 * Creates a new {@link CLContext}

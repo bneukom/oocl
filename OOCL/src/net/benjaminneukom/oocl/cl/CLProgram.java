@@ -56,7 +56,8 @@ public class CLProgram implements Closeable {
 
 		public static final BuildOption CL20 = new BuildOption("-cl-std=CL2.0");
 		public static final BuildOption MAD = new BuildOption("-cl-mad-enable");
-
+		public static final BuildOption EMPTY = new BuildOption("");
+		
 		public BuildOption(String option) {
 			this.option = option;
 		}
