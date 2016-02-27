@@ -1,2 +1,3 @@
-### OOCL ###
-Simple JOCL based object oriented OpenCL wrapper. Not yet complete.
+# Object Oriented CL (OOCL) Wrapper #
+
+Simple JOCL based object oriented OpenCL wrapper.
