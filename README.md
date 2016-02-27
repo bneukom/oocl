@@ -28,4 +28,4 @@ commandQueue.finish();
 ```
 
 ## Future Plans ##
-Not all JOCL features have been adapted
+Not all JOCL features have been adapted.
