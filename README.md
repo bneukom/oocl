@@ -26,3 +26,6 @@ commandQueue.execute(integrateKernel, 1, globalWorkSize, localWorkSize);
 commandQueue.finish();
 
 ```
+
+## Future Plans ##
+Not all JOCL features have been adapted
