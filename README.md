@@ -13,7 +13,7 @@ final float[] bodiesy = ...
 
 final CLDevide device = CLPlatform.getFirst().getDevice(DeviceType.GPU, d -> d.getDeviceVersion() >= 2.0f).orElseThrow(() -> new IllegalStateException());
 
-final CLContext context = device.createContext(contextProperties);
+final CLContext context = device.createContext();
 final CLCommandQueue commandQueue = context.createCommandQueue();
 
 final CLMemory<float[]> bodiesXBuffer = context.createBuffer(CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, bodiesX);
@@ -28,4 +28,6 @@ commandQueue.finish();
 ```
 
 ## Future Plans ##
-Not all JOCL features have been adapted.
+
+Not all features supported by JOCL have been adapted yet.
+
